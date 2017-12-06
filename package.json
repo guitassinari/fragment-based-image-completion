@@ -1,0 +1,19 @@
+{
+  "name": "fragment-based-image-completion",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guitassinari/fragment-based-image-completion.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guitassinari/fragment-based-image-completion/issues"
+  },
+  "homepage": "https://github.com/guitassinari/fragment-based-image-completion#readme"
+}
