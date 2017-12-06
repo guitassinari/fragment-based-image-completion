@@ -2,17 +2,26 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Fragment Based Image Completion</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css" />
 </head>
 <body>
-<h1>Hello World!</h1>
-<!-- All of the Node.js APIs are available in this renderer process. -->
-We are using Node.js <script>document.write(process.versions.node)</script>,
-Chromium <script>document.write(process.versions.chrome)</script>,
-and Electron <script>document.write(process.versions.electron)</script>.
+<nav class="blue darken-3">
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Fragment Based Image Completion</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a>Guilherme Tassinari</a></li>
+            <li><a>Denysom</a></li>
+        </ul>
+    </div>
+</nav>
 
 <script>
-  // You can also require other files to run in this process
   require('./renderer.js')
 </script>
+<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="node_modules/hammerjs/hammer.min.js"></script>
+<script type="text/javascript" src="node_modules/materialize-css/dist/js/materialize.js"></script>
 </body>
+</html>
