@@ -18,6 +18,11 @@
   },
   "homepage": "https://github.com/guitassinari/fragment-based-image-completion#readme",
   "devDependencies": {
+    "devtron": "^1.4.0",
     "electron": "1.7.9"
+  },
+  "dependencies": {
+    "electron-debug": "^1.4.0",
+    "materialize-css": "^0.100.2"
   }
 }
