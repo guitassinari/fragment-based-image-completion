@@ -17,17 +17,5 @@
 <script>
   require('./renderer.js')
 </script>
-<script>
-    function setImageSource(imageId){
-      var imageInputId = imageId+'Input'
-      var inputElement = document.getElementById(imageInputId)
-      var imageElement = document.getElementById(imageId)
-      imageElement.src = inputElement.value
-      console.log(imageElement.src , inputElement.value)
-    }
-</script>
-<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="node_modules/hammerjs/hammer.min.js"></script>
-<script type="text/javascript" src="node_modules/materialize-css/dist/js/materialize.js"></script>
 </body>
 </html>

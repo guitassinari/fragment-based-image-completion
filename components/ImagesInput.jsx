@@ -1,6 +1,7 @@
 'use babel';
 
 import React from 'react';
+import { Card, CardHeader, CardActions, CardText, RaisedButton } from 'material-ui';
 
 export default class ImagesInput extends React.Component {
   constructor(props){
@@ -12,18 +13,15 @@ export default class ImagesInput extends React.Component {
   }
 
   setOriginalImage(e){
-    console.log(e.target.value)
     this.readImage(e.target).then(
-      image => this.setState({ originalImage: e.value })
+      image => this.setState({ originalImage: image })
     )
   }
 
   setMaskImage(e){
-    console.log(e.target.value)
     this.readImage(e.target).then(
       image => this.setState({ maskImage: image })
     )
-
   }
 
   readImage(input){
@@ -49,14 +47,26 @@ export default class ImagesInput extends React.Component {
           </div>
         </nav>
         <div className="ImagesInput">
-          <div>
-            <img src={this.state.originalImage} />
-            <input type="file" onChange={e => this.setOriginalImage(e)} accept="image/jpeg" />
-          </div>
-          <div>
-            <img src={this.state.maskImage} />
-            <input type="file" onChange={e => this.setMaskImage(e)}  accept="image/jpeg" />
-          </div>
+          <Card>
+            <CardHeader title="Imagem original" />
+            <CardText>
+              <img src={this.state.originalImage} />
+            </CardText>
+            <CardActions>
+              <RaisedButton label="Escolher imagem" primary onClick={() => this.refs.originalImageInput.click()} />
+              <input type="file" onChange={e => this.setOriginalImage(e)} accept="image/jpeg" ref="originalImageInput" style={{display: "none"}} />
+            </CardActions>
+          </Card>
+          <Card>
+            <CardHeader title="Imagem mask" />
+            <CardText>
+              <img src={this.state.maskImage} />
+            </CardText>
+            <CardActions>
+              <RaisedButton label="Escolher imagem" primary onClick={() => this.refs.maskImageInput.click()} />
+              <input type="file" onChange={e => this.setMaskImage(e)}  accept="image/jpeg" ref="maskImageInput" style={{display: "none"}}/>
+            </CardActions>
+          </Card>
         </div>
       </div>
     )
