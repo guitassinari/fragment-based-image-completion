@@ -2,6 +2,10 @@
 
 import React from 'react';
 import { Card, CardHeader, CardActions, CardText, RaisedButton } from 'material-ui';
+import jimp from 'jimp'
+import {
+  removeBase64Prefix
+} from '../helpers/buffers'
 
 export default class ImagesInput extends React.Component {
   constructor(props){
@@ -9,6 +13,7 @@ export default class ImagesInput extends React.Component {
     this.state = {
       originalImage: null,
       maskImage: null,
+      approxImage: null,
     }
   }
 
@@ -32,6 +37,22 @@ export default class ImagesInput extends React.Component {
         reader.readAsDataURL(input.files[0]);
       }
     })
+  }
+
+  calculateApproxImage(){
+    const { originalImage, maskImage } = this.state
+    // if(!originalImage || !maskImage){
+    //   return
+    // }
+    const buffer = Buffer.from(removeBase64Prefix(originalImage), 'base64')
+    console.log(buffer)
+    const readOriginalImage = jimp.read(buffer)
+      .then(image => {
+        this.setState({approxImage: image})
+      }).catch(error => {
+        console.log(error)
+      })
+
   }
 
   render() {
@@ -58,7 +79,7 @@ export default class ImagesInput extends React.Component {
             </CardActions>
           </Card>
           <Card>
-            <CardHeader title="Imagem mask" />
+            <CardHeader title="Imagem matte" />
             <CardText>
               <img src={this.state.maskImage} />
             </CardText>
@@ -68,6 +89,15 @@ export default class ImagesInput extends React.Component {
             </CardActions>
           </Card>
         </div>
+        <Card>
+          <CardHeader title="Imagem aproximada" />
+          <CardText>
+            <img src={this.state.approxImage} />
+          </CardText>
+          <CardActions>
+            <RaisedButton label="Calcular aproximação" primary onClick={() => this.calculateApproxImage()} />
+          </CardActions>
+        </Card>
       </div>
     )
   }
