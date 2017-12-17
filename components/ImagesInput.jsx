@@ -4,8 +4,11 @@ import React from 'react';
 import { Card, CardHeader, CardActions, CardText, RaisedButton } from 'material-ui';
 import jimp from 'jimp'
 import {
-  removeBase64Prefix
+  removeBase64Prefix,
+  urlToJimp
 } from '../helpers/buffers'
+import { approximate } from '../helpers/approximation'
+import ImageInputCard from './ImageInputCard'
 
 export default class ImagesInput extends React.Component {
   constructor(props){
@@ -13,46 +16,16 @@ export default class ImagesInput extends React.Component {
     this.state = {
       originalImage: null,
       maskImage: null,
-      approxImage: null,
+      approxImageUrl: null,
     }
-  }
-
-  setOriginalImage(e){
-    this.readImage(e.target).then(
-      image => this.setState({ originalImage: image })
-    )
-  }
-
-  setMaskImage(e){
-    this.readImage(e.target).then(
-      image => this.setState({ maskImage: image })
-    )
-  }
-
-  readImage(input){
-    return new Promise((resolve, reject) => {
-      if (input.files && input.files[0]) {
-        let reader = new FileReader()
-        reader.onload = e => resolve(e.target.result)
-        reader.readAsDataURL(input.files[0]);
-      }
-    })
   }
 
   calculateApproxImage(){
     const { originalImage, maskImage } = this.state
-    // if(!originalImage || !maskImage){
-    //   return
-    // }
-    const buffer = Buffer.from(removeBase64Prefix(originalImage), 'base64')
-    console.log(buffer)
-    const readOriginalImage = jimp.read(buffer)
-      .then(image => {
-        this.setState({approxImage: image})
-      }).catch(error => {
-        console.log(error)
-      })
-
+    const image = approximate(originalImage, maskImage)
+    image.getBase64(jimp.AUTO, (error, urlImage) => {
+      this.setState({approxImageUrl: urlImage})
+    })
   }
 
   render() {
@@ -68,36 +41,18 @@ export default class ImagesInput extends React.Component {
           </div>
         </nav>
         <div className="ImagesInput">
-          <Card>
-            <CardHeader title="Imagem original" />
-            <CardText>
-              <img src={this.state.originalImage} />
-            </CardText>
-            <CardActions>
-              <RaisedButton label="Escolher imagem" primary onClick={() => this.refs.originalImageInput.click()} />
-              <input type="file" onChange={e => this.setOriginalImage(e)} accept="image/jpeg" ref="originalImageInput" style={{display: "none"}} />
-            </CardActions>
-          </Card>
-          <Card>
-            <CardHeader title="Imagem matte" />
-            <CardText>
-              <img src={this.state.maskImage} />
-            </CardText>
-            <CardActions>
-              <RaisedButton label="Escolher imagem" primary onClick={() => this.refs.maskImageInput.click()} />
-              <input type="file" onChange={e => this.setMaskImage(e)}  accept="image/jpeg" ref="maskImageInput" style={{display: "none"}}/>
-            </CardActions>
-          </Card>
+          <ImageInputCard title="Imagem original" onChange={image => this.setState({ originalImage: image })}/>
+          <ImageInputCard title="Imagem matte" onChange={image => this.setState({ maskImage: image })}/>
+            <Card>
+              <CardHeader title="Imagem aproximada" />
+              <CardText>
+                <img src={this.state.approxImageUrl} />
+              </CardText>
+              <CardActions>
+                <RaisedButton label="Calcular aproximação" primary onClick={() => this.calculateApproxImage()} />
+              </CardActions>
+            </Card>
         </div>
-        <Card>
-          <CardHeader title="Imagem aproximada" />
-          <CardText>
-            <img src={this.state.approxImage} />
-          </CardText>
-          <CardActions>
-            <RaisedButton label="Calcular aproximação" primary onClick={() => this.calculateApproxImage()} />
-          </CardActions>
-        </Card>
       </div>
     )
   }
