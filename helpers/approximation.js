@@ -1,11 +1,9 @@
 import jimp from 'jimp'
 import {
   validateImageSizes,
-  pixelWiseOperation,
   sumImages,
   negativeImage,
   multiplyImages,
-  newImageOfSameSizeAs
 } from '../helpers/image'
 
 const DIFF_THRESHOLD = 0

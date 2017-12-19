@@ -1,7 +1,7 @@
 import jimp from 'jimp'
 const RGB = ['r', 'g', 'b']
 
-function forEachRgbIn(pixel, operation){
+export function forEachRgbIn(pixel, operation){
   let resultPixel = RGB.reduce((newPixel, colorKey) => {
     newPixel[colorKey] = operation(colorKey)
     return newPixel
@@ -10,6 +10,7 @@ function forEachRgbIn(pixel, operation){
   return resultPixel
 }
 
+//image, otherImage = imagens jimp
 export function sumImages(image, otherImage){
   return pixelWiseOperation(image, otherImage, (pixel, otherPixel) => {
     return forEachRgbIn(pixel, colorKey => {
@@ -18,6 +19,7 @@ export function sumImages(image, otherImage){
   })
 }
 
+//image = imagens jimp
 export function negativeImage(image){
   return pixelWiseOperation(image, image, (pixel, otherPixel) => {
     return forEachRgbIn(pixel, colorKey => {
@@ -26,6 +28,7 @@ export function negativeImage(image){
   })
 }
 
+//image, otherImage = imagens jimp
 export function multiplyImages(image, otherImage){
   return pixelWiseOperation(image, otherImage, (pixel, otherPixel) => {
     return forEachRgbIn(pixel, colorKey => {
@@ -34,10 +37,12 @@ export function multiplyImages(image, otherImage){
   })
 }
 
+//image, otherImage = imagens jimp
+//operation = function
 export function pixelWiseOperation(image, otherImage, operation){
   validateImageSizes(image, otherImage)
   let result = newImageOfSameSizeAs(image)
-  image.scan(0,0, image.bitmap.width, image.bitmap.height, (x, y, dx) => {
+  image.scan(0,0, image.bitmap.width, image.bitmap.height, (x, y) => {
     const pixelColor = operation(
       jimp.intToRGBA(image.getPixelColor(x,y)),
       jimp.intToRGBA(otherImage.getPixelColor(x,y))
@@ -56,6 +61,7 @@ export function newImageOfSameSizeAs(image, pixelDefaultColor = 0){
   )
 }
 
+//image, otherImage = imagens jimp
 export function validateImageSizes(image, otherImage){
   if(!image || !otherImage){
     throw 'Imagem indefinida'

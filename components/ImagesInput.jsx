@@ -3,11 +3,8 @@
 import React from 'react';
 import { Card, CardHeader, CardActions, CardText, RaisedButton } from 'material-ui';
 import jimp from 'jimp'
-import {
-  removeBase64Prefix,
-  urlToJimp
-} from '../helpers/buffers'
 import { approximate } from '../helpers/approximation'
+import { confidenceMap } from '../helpers/confidence'
 import ImageInputCard from './ImageInputCard'
 
 export default class ImagesInput extends React.Component {
@@ -17,6 +14,7 @@ export default class ImagesInput extends React.Component {
       originalImage: null,
       maskImage: null,
       approxImageUrl: null,
+      confidenceImageUrl: null,
     }
   }
 
@@ -25,6 +23,13 @@ export default class ImagesInput extends React.Component {
     const image = approximate(originalImage, maskImage)
     image.getBase64(jimp.AUTO, (error, urlImage) => {
       this.setState({approxImageUrl: urlImage})
+    })
+  }
+
+  calculateConfidenceMap(){
+    const image = confidenceMap(this.state.maskImage)
+    image.getBase64(jimp.AUTO, (error, urlImage) => {
+      this.setState({confidenceImageUrl: urlImage})
     })
   }
 
@@ -43,15 +48,24 @@ export default class ImagesInput extends React.Component {
         <div className="ImagesInput">
           <ImageInputCard title="Imagem original" onChange={image => this.setState({ originalImage: image })}/>
           <ImageInputCard title="Imagem matte" onChange={image => this.setState({ maskImage: image })}/>
-            <Card>
-              <CardHeader title="Imagem aproximada" />
-              <CardText>
-                <img src={this.state.approxImageUrl} />
-              </CardText>
-              <CardActions>
-                <RaisedButton label="Calcular aproximação" primary onClick={() => this.calculateApproxImage()} />
-              </CardActions>
-            </Card>
+          <Card>
+            <CardHeader title="Imagem aproximada" />
+            <CardText>
+              <img src={this.state.approxImageUrl} />
+            </CardText>
+            <CardActions>
+              <RaisedButton label="Calcular aproximação" primary onClick={() => this.calculateApproxImage()} />
+            </CardActions>
+          </Card>
+          <Card>
+            <CardHeader title="Confidence map" />
+            <CardText>
+              <img src={this.state.confidenceImageUrl} />
+            </CardText>
+            <CardActions>
+              <RaisedButton label="Calcular Confidence map" primary onClick={() => this.calculateConfidenceMap()} />
+            </CardActions>
+          </Card>
         </div>
       </div>
     )
