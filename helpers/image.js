@@ -10,6 +10,7 @@ function forEachRgbIn(pixel, operation){
   return resultPixel
 }
 
+//image, otherImage = imagens jimp
 export function sumImages(image, otherImage){
   return pixelWiseOperation(image, otherImage, (pixel, otherPixel) => {
     return forEachRgbIn(pixel, colorKey => {
@@ -18,6 +19,7 @@ export function sumImages(image, otherImage){
   })
 }
 
+//image = imagens jimp
 export function negativeImage(image){
   return pixelWiseOperation(image, image, (pixel, otherPixel) => {
     return forEachRgbIn(pixel, colorKey => {
@@ -26,6 +28,7 @@ export function negativeImage(image){
   })
 }
 
+//image, otherImage = imagens jimp
 export function multiplyImages(image, otherImage){
   return pixelWiseOperation(image, otherImage, (pixel, otherPixel) => {
     return forEachRgbIn(pixel, colorKey => {
@@ -34,6 +37,8 @@ export function multiplyImages(image, otherImage){
   })
 }
 
+//image, otherImage = imagens jimp
+//operation = function
 export function pixelWiseOperation(image, otherImage, operation){
   validateImageSizes(image, otherImage)
   let result = newImageOfSameSizeAs(image)
@@ -56,6 +61,7 @@ export function newImageOfSameSizeAs(image, pixelDefaultColor = 0){
   )
 }
 
+//image, otherImage = imagens jimp
 export function validateImageSizes(image, otherImage){
   if(!image || !otherImage){
     throw 'Imagem indefinida'
