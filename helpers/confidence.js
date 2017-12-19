@@ -5,6 +5,12 @@ import jimp from 'jimp'
 
 const ERRO = -1;
 
+const GAUSSIAN_FILTER = [
+    [0.0625, 0.125, 0.0625],
+    [0.125,  0.25,  0.125],
+    [0.0625, 0.125, 0.0625]
+];
+
 function createArray(length) {
     let arr = new Array(length || 0),
         i = length;
@@ -89,28 +95,39 @@ function inverse(number) {
     }
 }
 
+function rgbToWhiteBlack(tuple) {
+    if (tuple.r == 255 && tuple.g == 255 && tuple.b == 255) {
+        return 1;
+    } 
+    else {
+        return 0;
+    }
+}
+
 function beta(alphaMatte, i, j) {
-    if (alphaMatte[i][j] == 0) {
+    
+    let color = jimp.intToRGBA(alphaMatte.getPixelColor(i,j));
+
+    if (rgbToWhiteBlack(color)) {
         return 1;
     }
     else {
         let N = neighborhood(alphaMatte, i, j);
-        let mu = mean(N);
-        let sdeviation = std(N);
-        let sum = 0;
-
-        for (let count_i = 0; count_i < N.length; count_i++) {
-            for (let count_j = 0; count_j < N[0].length; count_j++) {
-                sum += (pdf(N[count_i][count_j], mu, sdeviation) * inverse(N[count_i][count_j]));
-            }
-        }
+        N = N.reduce( (a,b) => a.concat(b));
+        
+        N = N.map(function(tuple){return rgbToWhiteBlack(tuple)});
+        
+        let G = GAUSSIAN_FILTER.reduce( (a,b) => a.concat(b));
+        for(let i = 0; i < N.length; i++){ 
+            sum += N[i] * G[i];
+        } 
     }
 }
 
 export function confidenceMap(alphaMatte) {
-    let confidence = createArray(alphaMatte.length, alphaMatte[0].length);
-    for (let j = 0; j < alphaMatte.length; j++) {
-        for (let i = 0; i < alphaMatte[j].length; i++) {
+    let confidence = createArray(alphaMatte.bitmap.width, alphaMatte.bitmap.height);
+    for (let j = 0; j < alphaMatte.bitmap.width; j++) {
+        for (let i = 0; i < alphaMatte.bitmap.height; i++) {
             confidence[i][j] = beta(alphaMatte, i, j);
         }
     }
