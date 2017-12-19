@@ -1,7 +1,7 @@
 import jimp from 'jimp'
 const RGB = ['r', 'g', 'b']
 
-function forEachRgbIn(pixel, operation){
+export function forEachRgbIn(pixel, operation){
   let resultPixel = RGB.reduce((newPixel, colorKey) => {
     newPixel[colorKey] = operation(colorKey)
     return newPixel
@@ -42,7 +42,7 @@ export function multiplyImages(image, otherImage){
 export function pixelWiseOperation(image, otherImage, operation){
   validateImageSizes(image, otherImage)
   let result = newImageOfSameSizeAs(image)
-  image.scan(0,0, image.bitmap.width, image.bitmap.height, (x, y, dx) => {
+  image.scan(0,0, image.bitmap.width, image.bitmap.height, (x, y) => {
     const pixelColor = operation(
       jimp.intToRGBA(image.getPixelColor(x,y)),
       jimp.intToRGBA(otherImage.getPixelColor(x,y))
