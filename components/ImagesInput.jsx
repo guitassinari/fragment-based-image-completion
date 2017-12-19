@@ -36,7 +36,7 @@ export default class ImagesInput extends React.Component {
             <a href="#" className="brand-logo">Fragment Based Image Completion</a>
             <ul id="nav-mobile" className="right hide-on-med-and-down">
               <li><a>Guilherme Tassinari</a></li>
-              <li><a>Denysom</a></li>
+              <li><a>Denyson Grellert</a></li>
             </ul>
           </div>
         </nav>
